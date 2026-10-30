@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Rental Management System - Unit 1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <header class="header">
+        <div class="container navbar">
+            <h1 class="logo">🚗 Vehicle Rental Management System</h1>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active">Fleet Dashboard</a></li>
+                    <li><a href="add-vehicle.html">Add Vehicle</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        
+        <!-- Summary Stats Cards -->
+        <section class="stats-section">
+            <div class="card stat-card">
+                <h3>Total Fleet Vehicles</h3>
+                <p class="stat-number">8</p>
+            </div>
+            <div class="card stat-card">
+                <h3>Available for Rent</h3>
+                <p class="stat-number">4</p>
+            </div>
+            <div class="card stat-card">
+                <h3>Currently Rented</h3>
+                <p class="stat-number">3</p>
+            </div>
+            <div class="card stat-card">
+                <h3>In Maintenance</h3>
+                <p class="stat-number">1</p>
+            </div>
+        </section>
+
+        <!-- Vehicle Records Table Section -->
+        <section class="card table-card">
+            <div class="card-header">
+                <h2>Fleet Records & Availability</h2>
+                <a href="add-vehicle.html" class="btn btn-primary">+ Add New Vehicle</a>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Reg / Plate No.</th>
+                            <th>Vehicle</th>
+                            <th>Category</th>
+                            <th>Fuel Type</th>
+                            <th>Daily Rate</th>
+                            <th>Seats</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><code>KA-01-EA-2024</code></td>
+                            <td><strong>Toyota Camry Hybrid</strong></td>
+                            <td><span class="badge badge-category">Sedan</span></td>
+                            <td>Hybrid</td>
+                            <td>$65.00/day</td>
+                            <td>5</td>
+                            <td><span class="badge badge-available">Available</span></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><code>MH-02-CB-1988</code></td>
+                            <td><strong>Tesla Model 3 Long Range</strong></td>
+                            <td><span class="badge badge-category">Electric</span></td>
+                            <td>Electric</td>
+                            <td>$95.00/day</td>
+                            <td>5</td>
+                            <td><span class="badge badge-rented">Rented</span></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><code>DL-04-AB-7744</code></td>
+                            <td><strong>Hyundai Creta SX</strong></td>
+                            <td><span class="badge badge-category">SUV</span></td>
+                            <td>Petrol</td>
+                            <td>$55.00/day</td>
+                            <td>5</td>
+                            <td><span class="badge badge-available">Available</span></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><code>TN-07-JK-3030</code></td>
+                            <td><strong>BMW 330i M Sport</strong></td>
+                            <td><span class="badge badge-category">Luxury</span></td>
+                            <td>Petrol</td>
+                            <td>$140.00/day</td>
+                            <td>5</td>
+                            <td><span class="badge badge-rented">Rented</span></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td><code>KA-05-MN-9922</code></td>
+                            <td><strong>Mahindra Thar 4x4</strong></td>
+                            <td><span class="badge badge-category">SUV</span></td>
+                            <td>Diesel</td>
+                            <td>$75.00/day</td>
+                            <td>4</td>
+                            <td><span class="badge badge-maintenance">Maintenance</span></td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td><code>DL-01-XY-5511</code></td>
+                            <td><strong>Mercedes-Benz C-Class</strong></td>
+                            <td><span class="badge badge-category">Luxury</span></td>
+                            <td>Petrol</td>
+                            <td>$160.00/day</td>
+                            <td>5</td>
+                            <td><span class="badge badge-available">Available</span></td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td><code>MH-12-PQ-4412</code></td>
+                            <td><strong>Tata Nexon EV Max</strong></td>
+                            <td><span class="badge badge-category">Electric</span></td>
+                            <td>Electric</td>
+                            <td>$60.00/day</td>
+                            <td>5</td>
+                            <td><span class="badge badge-available">Available</span></td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td><code>HR-26-ZZ-8181</code></td>
+                            <td><strong>Ford Mustang GT 5.0</strong></td>
+                            <td><span class="badge badge-category">Sports</span></td>
+                            <td>Petrol</td>
+                            <td>$210.00/day</td>
+                            <td>4</td>
+                            <td><span class="badge badge-rented">Rented</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 Vehicle Rental Management System | Unit 1 - Pure HTML & CSS</p>
+    </footer>
+
+</body>
+</html>

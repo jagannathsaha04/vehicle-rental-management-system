@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Rental Management System - Unit 5 (Final CRUD Project)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <header class="header">
+        <div class="container navbar">
+            <div class="brand">
+                <h1 class="logo">🚗 Vehicle Rental Management</h1>
+                <span class="badge badge-unit">Unit 5: Full CRUD Final</span>
+            </div>
+            <div class="nav-actions">
+                <a href="/swagger-ui/index.html" target="_blank" class="btn btn-outline" title="Open Interactive Swagger OpenAPI Documentation">Swagger Docs ↗</a>
+                <button class="btn btn-primary" onclick="openAddModal()">+ Add Vehicle</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <!-- Backend Status Banner -->
+        <div id="backendStatusBanner" class="status-banner status-loading">
+            <span class="status-indicator"></span>
+            <span id="backendStatusText">Connecting to Spring Boot REST API (http://localhost:8081)...</span>
+        </div>
+
+        <!-- Alert Notification Box -->
+        <div id="alertBox" class="alert d-none"></div>
+
+        <!-- Stat Cards Section -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <h3>Total Fleet Vehicles</h3>
+                <p class="stat-number" id="statTotal">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Available for Rent</h3>
+                <p class="stat-number" id="statAvailable">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Active Rentals</h3>
+                <p class="stat-number" id="statRented">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Average Daily Rate</h3>
+                <p class="stat-number" id="statAvgRate">$0.00</p>
+            </div>
+        </section>
+
+        <!-- Fleet Inventory Section -->
+        <section class="card">
+            <div class="card-header flex-between">
+                <div>
+                    <h2>Fleet Inventory & Lifecycle Management</h2>
+                    <p class="subtitle">Complete CRUD Operations powered by Spring Boot 3, JPA & MySQL</p>
+                </div>
+                
+                <div class="header-tools">
+                    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search by make, model, plate, or type...">
+                    <button class="btn btn-secondary" onclick="fetchVehicles()">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Vehicle</th>
+                            <th>Plate / Reg No.</th>
+                            <th>Category</th>
+                            <th>Fuel Type</th>
+                            <th>Daily Rate</th>
+                            <th>Status</th>
+                            <th>Active Renter</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vehicleTableBody">
+                        <!-- Rendered dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="loadingState" class="empty-state">
+                Fetching fleet records from Spring Boot backend...
+            </div>
+
+            <div id="noRecords" class="empty-state d-none">
+                No vehicles found in fleet. Click "+ Add Vehicle" to create a new record.
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal: Add Vehicle (CREATE) -->
+    <div id="addModal" class="modal d-none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Vehicle to Fleet (Create)</h3>
+                <span class="close-btn" onclick="closeAddModal()">&times;</span>
+            </div>
+            <form id="addVehicleForm" class="modal-form">
+                <div class="form-group">
+                    <label for="addPlate">Registration Plate <span class="required">*</span></label>
+                    <input type="text" id="addPlate" placeholder="e.g. KA-01-EA-2024" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addMake">Make / Brand <span class="required">*</span></label>
+                        <input type="text" id="addMake" placeholder="e.g. Toyota" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addModel">Model Name <span class="required">*</span></label>
+                        <input type="text" id="addModel" placeholder="e.g. Camry" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addCategory">Category <span class="required">*</span></label>
+                        <select id="addCategory" required>
+                            <option value="">-- Select Category --</option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                            <option value="Electric">Electric</option>
+                            <option value="Luxury">Luxury</option>
+                            <option value="Sports">Sports</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addFuel">Fuel Type <span class="required">*</span></label>
+                        <select id="addFuel" required>
+                            <option value="Petrol">Petrol</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Electric">Electric</option>
+                            <option value="Hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addRate">Daily Rate ($) <span class="required">*</span></label>
+                        <input type="number" id="addRate" step="0.5" min="10" placeholder="e.g. 65.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addSeats">Seats</label>
+                        <select id="addSeats">
+                            <option value="4">4 Seater</option>
+                            <option value="5" selected>5 Seater</option>
+                            <option value="7">7 Seater</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="addMileage">Current Mileage (km)</label>
+                    <input type="number" id="addMileage" placeholder="15000" value="15000" min="0">
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Save Vehicle</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Vehicle (UPDATE) -->
+    <div id="editModal" class="modal d-none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Vehicle Details (Update)</h3>
+                <span class="close-btn" onclick="closeEditModal()">&times;</span>
+            </div>
+            <form id="editVehicleForm" class="modal-form">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label for="editPlate">Registration Plate <span class="required">*</span></label>
+                    <input type="text" id="editPlate" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMake">Make / Brand <span class="required">*</span></label>
+                        <input type="text" id="editMake" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editModel">Model Name <span class="required">*</span></label>
+                        <input type="text" id="editModel" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editCategory">Category <span class="required">*</span></label>
+                        <select id="editCategory" required>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                            <option value="Electric">Electric</option>
+                            <option value="Luxury">Luxury</option>
+                            <option value="Sports">Sports</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editFuel">Fuel Type <span class="required">*</span></label>
+                        <select id="editFuel" required>
+                            <option value="Petrol">Petrol</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Electric">Electric</option>
+                            <option value="Hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editRate">Daily Rate ($) <span class="required">*</span></label>
+                        <input type="number" id="editRate" step="0.5" min="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStatus">Status</label>
+                        <select id="editStatus">
+                            <option value="AVAILABLE">AVAILABLE</option>
+                            <option value="RENTED">RENTED</option>
+                            <option value="MAINTENANCE">MAINTENANCE</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editRenter">Active Renter Name</label>
+                    <input type="text" id="editRenter" placeholder="Leave empty if AVAILABLE">
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Update Vehicle</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 Vehicle Rental Management System | Unit 5 - Complete Full Stack CRUD Application with Swagger</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

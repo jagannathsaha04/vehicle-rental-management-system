@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Rental Management System - Unit 4 (Spring Boot + Web)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container navbar">
+            <div class="brand">
+                <h1 class="logo">🚗 Vehicle Rental Management System</h1>
+                <span class="badge badge-unit">Unit 4: Spring Boot REST API</span>
+            </div>
+            <div>
+                <button class="btn btn-primary" onclick="openAddModal()">+ Add Vehicle</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <!-- Live Backend Status Banner -->
+        <div id="backendStatusBanner" class="status-banner status-loading">
+            <span class="status-indicator"></span>
+            <span id="backendStatusText">Connecting to Spring Boot REST backend (http://localhost:8081)...</span>
+        </div>
+
+        <!-- Alert Notification Box -->
+        <div id="alertBox" class="alert d-none"></div>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <h3>Total Fleet</h3>
+                <p class="stat-number" id="statTotal">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Available for Rent</h3>
+                <p class="stat-number" id="statAvailable">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Currently Rented</h3>
+                <p class="stat-number" id="statRented">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Average Daily Rate</h3>
+                <p class="stat-number" id="statAvgRate">$0.00</p>
+            </div>
+        </section>
+
+        <!-- Fleet Records Section -->
+        <section class="card">
+            <div class="card-header flex-between">
+                <div>
+                    <h2>Fleet Inventory & REST Management</h2>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Connected directly to Spring Boot 3 & MySQL REST Endpoints</p>
+                </div>
+                
+                <div class="header-tools">
+                    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search make, model, plate, or type...">
+                    <button class="btn btn-secondary" onclick="fetchVehicles()">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Vehicle</th>
+                            <th>Plate / Reg No.</th>
+                            <th>Category</th>
+                            <th>Fuel Type</th>
+                            <th>Daily Rate</th>
+                            <th>Status</th>
+                            <th>Current Renter</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vehicleTableBody">
+                        <!-- Rendered dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="loadingState" class="empty-state">
+                Fetching fleet records from Spring Boot REST API...
+            </div>
+
+            <div id="noRecords" class="empty-state d-none">
+                No vehicles found. Click "+ Add Vehicle" to create a new fleet record.
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal: Add Vehicle -->
+    <div id="addModal" class="modal d-none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Vehicle to Fleet (POST /api/vehicles)</h3>
+                <span class="close-btn" onclick="closeAddModal()">&times;</span>
+            </div>
+            <form id="addVehicleForm" class="modal-form">
+                <div class="form-group">
+                    <label for="addPlate">Registration Plate <span class="required">*</span></label>
+                    <input type="text" id="addPlate" placeholder="e.g. KA-01-EA-2024" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addMake">Make / Brand <span class="required">*</span></label>
+                        <input type="text" id="addMake" placeholder="e.g. Toyota" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addModel">Model Name <span class="required">*</span></label>
+                        <input type="text" id="addModel" placeholder="e.g. Camry" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addCategory">Category <span class="required">*</span></label>
+                        <select id="addCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                            <option value="Electric">Electric</option>
+                            <option value="Luxury">Luxury</option>
+                            <option value="Sports">Sports</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="addFuel">Fuel Type</label>
+                        <select id="addFuel">
+                            <option value="Petrol">Petrol</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Electric">Electric</option>
+                            <option value="Hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="addRate">Daily Rate ($) <span class="required">*</span></label>
+                        <input type="number" id="addRate" step="0.5" min="10" placeholder="e.g. 65.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addSeats">Seats</label>
+                        <select id="addSeats">
+                            <option value="4">4 Seater</option>
+                            <option value="5" selected>5 Seater</option>
+                            <option value="7">7 Seater</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Save to Spring Boot</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 Vehicle Rental Management System | Unit 4 - Spring Boot 3 REST Backend & Frontend</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

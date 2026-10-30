@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Rental Management System - Unit 2 (Client Scripting)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <header class="header">
+        <div class="container navbar">
+            <div class="brand">
+                <h1 class="logo">🚗 Vehicle Rental Management</h1>
+                <span class="badge badge-unit">Unit 2: Client-side Scripting</span>
+            </div>
+            <div>
+                <button class="btn btn-secondary btn-sm" id="resetFleetBtn">🔄 Reset Sample Fleet</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <!-- Alert Notification Box -->
+        <div id="alertBox" class="alert d-none"></div>
+
+        <!-- Real-time KPI Stats Section -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <h3>Total Fleet Vehicles</h3>
+                <p class="stat-number" id="statTotal">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Available for Rent</h3>
+                <p class="stat-number" id="statAvailable">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Currently Rented</h3>
+                <p class="stat-number" id="statRented">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Average Daily Rate</h3>
+                <p class="stat-number" id="statAvgRate">$0.00</p>
+            </div>
+        </section>
+
+        <!-- Two-column Dashboard Grid -->
+        <div class="dashboard-grid">
+
+            <!-- Left: Add Vehicle Form -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>Add Vehicle to Fleet</h2>
+                </div>
+
+                <form id="vehicleForm" novalidate>
+                    <div class="form-group">
+                        <label for="plateNumber">Plate / Reg Number <span class="required">*</span></label>
+                        <input type="text" id="plateNumber" placeholder="e.g. KA-01-EA-2024">
+                        <span class="error-msg" id="plateError"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="make">Make / Brand <span class="required">*</span></label>
+                            <input type="text" id="make" placeholder="e.g. Toyota">
+                            <span class="error-msg" id="makeError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="model">Model Name <span class="required">*</span></label>
+                            <input type="text" id="model" placeholder="e.g. Camry">
+                            <span class="error-msg" id="modelError"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="category">Category <span class="required">*</span></label>
+                            <select id="category">
+                                <option value="">Select Category</option>
+                                <option value="Sedan">Sedan</option>
+                                <option value="SUV">SUV</option>
+                                <option value="Electric">Electric</option>
+                                <option value="Luxury">Luxury</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Hatchback">Hatchback</option>
+                            </select>
+                            <span class="error-msg" id="categoryError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="fuelType">Fuel Type <span class="required">*</span></label>
+                            <select id="fuelType">
+                                <option value="">Select Fuel</option>
+                                <option value="Petrol">Petrol</option>
+                                <option value="Diesel">Diesel</option>
+                                <option value="Electric">Electric</option>
+                                <option value="Hybrid">Hybrid</option>
+                            </select>
+                            <span class="error-msg" id="fuelError"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dailyRate">Daily Rate ($) <span class="required">*</span></label>
+                            <input type="number" id="dailyRate" step="0.5" min="10" placeholder="e.g. 65.00">
+                            <span class="error-msg" id="rateError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="seatingCapacity">Seats</label>
+                            <select id="seatingCapacity">
+                                <option value="4">4 Seater</option>
+                                <option value="5" selected>5 Seater</option>
+                                <option value="7">7 Seater</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Vehicle</button>
+                        <button type="button" class="btn btn-secondary" id="resetFormBtn">Clear</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Right: Fleet Records Table -->
+            <section class="card">
+                <div class="card-header flex-between">
+                    <h2>Fleet Inventory (<span id="totalCount">0</span>)</h2>
+                    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search by make, model, plate, or type...">
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Vehicle</th>
+                                <th>License Plate</th>
+                                <th>Category</th>
+                                <th>Daily Rate</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vehicleTableBody">
+                            <!-- Rendered dynamically via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="noRecords" class="empty-state d-none">
+                    No vehicles found matching your query.
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 Vehicle Rental Management System | Unit 2 - HTML, CSS & JavaScript</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
